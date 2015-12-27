@@ -26,10 +26,11 @@ class newClientWindow(Tk):
             tkMessageBox.showerror("New Client Entry Wizard", "Please enter valid values")
         else:
             try:
-                fin = anydbm.open("client.db", "w")
+                fin = anydbm.open(r'AutoBill\client.db', "w")
             except:
-                fin = anydbm.open("client.db", "c")
+                fin = anydbm.open(r'AutoBill\client.db', "c")
             finally:
-                fin[savelist[0]] = savelist[1]
+                fin[savelist[1]] = savelist[0]
+                fin.close()
                 self.destroy()
                 
