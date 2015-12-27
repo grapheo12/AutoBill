@@ -1,7 +1,6 @@
 from Tkinter import * 
-from os.path import dirname, abspath
 import wizard as w
-import anydbm, pickle
+import anydbm
 
 root = Tk()
 root.title("AutoBill for Bharat Security")
@@ -21,7 +20,7 @@ class topMenu(Menu):
         self.add_command(label="Exit", command=root.destroy)
         
     def newClientWizard(event):
-        w.newClientWindow().mainloop()
+        w.newClientWindow()
 
 
 s = topMenu(root, borderwidth=10)
@@ -49,11 +48,11 @@ cli.place(relx=0.5, rely=0.1)
 #Create month selector
 month = StringVar(root)
 
-ml = [None, 'January', 'February', 'March',
+ml = ['January', 'February', 'March',
       'April', 'May', 'June', 'July', 'August',
       'September', 'October', 'November', 'December']
  
-month.set(ml[1]) 
+month.set(ml[0]) 
     
 mon = apply(OptionMenu, (root, month) + tuple(ml))
 mon.config(background="#ffffff")
@@ -79,14 +78,14 @@ def set_init_date(*args):
     global date, month, year
     buff_month = month.get()
     buff_year = year.get()
-    _num_days = [None, 31, 28, 31, 30, 31, 30, 31,
+    _num_days = [31, 28, 31, 30, 31, 30, 31,
                  31, 30, 31, 30, 31]
                  
     if int(buff_year) % 4 == 0 and buff_month == 'February':
         init_date = '29.02.%s' % buff_year 
     else:
         init_date = '%s.%s.%s' % (_num_days[ml.index(buff_month)], 
-                                  str(ml.index(buff_month)).zfill(2), 
+                                  str(ml.index(buff_month) + 1).zfill(2), 
                                   buff_year)
     date.set(init_date)
 
@@ -128,12 +127,15 @@ saver.place(relx=0.65, rely=0.8)
 
 def make_active_passive(*args):
     global security, gunman, saver 
-    total = security.get() + gunman.get() 
-    if total == 0:
+    try:
+        total = int(security.get()) + int(gunman.get()) 
+        if total == 0:
+            saver.config(state=DISABLED)
+        else:
+            saver.config(state=NORMAL)
+    except:
         saver.config(state=DISABLED)
-    else:
-        saver.config(state=NORMAL)
-        
+            
 security.trace('w', make_active_passive)
 gunman.trace('w', make_active_passive)
 
