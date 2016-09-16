@@ -1,6 +1,7 @@
 from Tkinter import * 
 import wizard as w
 import anydbm
+import time
 
 root = Tk()
 root.title("AutoBill for Bharat Security")
